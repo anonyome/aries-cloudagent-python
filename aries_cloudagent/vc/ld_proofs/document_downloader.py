@@ -120,10 +120,8 @@ class JsonLdDocumentDownloader:
                 )
             headers = options.get("headers")
             if headers is None:
-                headers = {
-                    "Accept": "application/ld+json, application/json",
-                    "User-Agent": f"AriesCloudAgent/{__version__}"
-                }
+                headers = {"Accept": "application/ld+json, application/json"}
+            headers["User-Agent"] = f"AriesCloudAgent/{__version__}"
             response = requests.get(url, headers=headers, **kwargs)
 
             content_type = response.headers.get("content-type")
