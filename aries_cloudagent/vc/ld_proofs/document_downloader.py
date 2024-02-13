@@ -8,6 +8,7 @@ import string
 from typing import Dict, Optional
 import urllib.parse as urllib_parse
 from importlib import resources
+from ...version import __version__
 
 import requests
 from pyld import jsonld
@@ -119,7 +120,10 @@ class JsonLdDocumentDownloader:
                 )
             headers = options.get("headers")
             if headers is None:
-                headers = {"Accept": "application/ld+json, application/json"}
+                headers = {
+                    "Accept": "application/ld+json, application/json",
+                    "User-Agent": f"AriesCloudAgent/{__version__}"
+                }
             response = requests.get(url, headers=headers, **kwargs)
 
             content_type = response.headers.get("content-type")
