@@ -47,6 +47,9 @@ from .test_vc_document_signed_did_key_ed25519 import (
     TEST_VC_DOCUMENT_SIGNED_DID_KEY_ED25519,
 )
 from .test_vc_document_nested_reveal import TEST_VC_DOCUMENT_NESTED_REVEAL
+from .test_ld_document_correct_schema import TEST_LD_DOCUMENT_CORRECT_SCHEMA
+from .test_ld_document_incorrect_schema import TEST_LD_DOCUMENT_INCORRECT_SCHEMA
+from .test_ld_document_incorrect_url import TEST_LD_DOCUMENT_INCORRECT_URL
 
 __all__ = [
     "BBS_NESTED_VC_FULL_REVEAL_DOCUMENT_MATTR",
@@ -85,4 +88,7 @@ __all__ = [
     "TEST_VC_DOCUMENT_SIGNED_DID_KEY_ED25519",
     "TEST_VC_DOCUMENT_DID_KEY_ED25519",
     "TEST_VC_DOCUMENT_NESTED_REVEAL",
+    "TEST_LD_DOCUMENT_CORRECT_SCHEMA",
+    "TEST_LD_DOCUMENT_INCORRECT_SCHEMA",
+    "TEST_LD_DOCUMENT_INCORRECT_URL",
 ]

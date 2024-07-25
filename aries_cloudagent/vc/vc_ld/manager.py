@@ -1,9 +1,15 @@
 """Manager for performing Linked Data Proof signatures over JSON-LD formatted W3C VCs."""
 
+import logging
 from typing import Dict, List, Optional, Type, Union, cast
+
 
 from pyld import jsonld
 from pyld.jsonld import JsonLdProcessor
+from aries_cloudagent.vc.vc_ld.schema_validators.error import (
+    VcSchemaValidatorBuilderError
+)
+from aries_cloudagent.vc.vc_ld.validate import validate_credential, validate_presentation
 
 from ...core.profile import Profile
 from ...storage.vc_holder.base import VCHolder
@@ -94,6 +100,7 @@ class VcLdpManager:
     def __init__(self, profile: Profile):
         """Initialize the VC LD Proof Manager."""
         self.profile = profile
+        self._logger = logging.getLogger(__name__)
 
     async def _did_info_for_did(self, did: str) -> DIDInfo:
         """Get the did info for specified did.
@@ -290,6 +297,8 @@ class VcLdpManager:
         if holder_did and holder_did.startswith("did:key") and "id" not in subject:
             subject["id"] = holder_did
 
+        await self.validate_credential(credential)
+
         return credential
 
     async def prepare_presentation(
@@ -425,7 +434,7 @@ class VcLdpManager:
             expanded_types=types,
             issuer_id=vc.issuer_id,
             subject_ids=vc.credential_subject_ids,
-            schema_ids=[],  # Schemas not supported yet
+            schema_ids=vc.credential_schema_ids,
             proof_types=[vc.proof.type],
             cred_value=vc.serialize(),
             given_id=vc.id,
@@ -485,3 +494,46 @@ class VcLdpManager:
             document_loader=self.profile.inject(DocumentLoader),
             challenge=options.challenge,
         )
+    
+    async def validate_presentation(
+            self, vp: VerifiablePresentation
+    ) -> Union[bool, List[str]]:
+        """Validate a VP with a Linked Data Proof."""
+        
+        validation_result = await validate_presentation(
+            presentation=vp.serialize()
+        )
+
+        validate_messages = []
+        for error in validation_result.errors:
+            if isinstance(error, VcSchemaValidatorBuilderError):
+                self._logger.debug(str(error))
+            validate_messages.append(str(error))  
+        
+        return (validation_result.validated, validate_messages)
+
+       
+    async def validate_credential(
+            self, vc: VerifiableCredential
+    ):
+        """Validate a credential with a Linked Data Proof."""
+        
+        validation_result = await validate_credential(
+            credential=vc
+        )
+
+        validate_messages = []
+        for error in validation_result.errors:
+            if isinstance(error, VcSchemaValidatorBuilderError):
+                self._logger.debug(str(error))
+                if self.profile.context.settings.get(
+                "debug.raise_errors_for_unknown_w3c_schemas"):
+                    raise VcLdpManagerError(
+                "Unable to validate credential. ") from error
+            else:
+                validate_messages.append(str(error))  
+
+        if len(validate_messages) > 0:
+            self._logger.debug("credentialSchema validation error: %s", validate_messages)
+            raise VcLdpManagerError(f"Invalid Credential: {validate_messages}")
+        
