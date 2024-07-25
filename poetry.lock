@@ -3025,4 +3025,4 @@ indy = ["python3-indy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "11cd858fed27a8394c24022ab259ae097104d1c19e103e48e647b2b3b13478a2"
+content-hash = "4a1e818601a0e4b024e8baaed9e72efce2b1be625cedc6ca9561a7f743854c95"
