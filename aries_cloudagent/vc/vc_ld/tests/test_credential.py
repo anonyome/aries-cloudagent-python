@@ -346,3 +346,63 @@ PRESENTATION_SIGNED = {
         "jws": "eyJhbGciOiAiRWREU0EiLCAiYjY0IjogZmFsc2UsICJjcml0IjogWyJiNjQiXX0..vLk6iXrPxdt4xWq_Lwnd85cy17Npol1ALxYoMhZrKpmkaWDOoz_exP1ggurPik7Rhpa7a82AfrT0OnigJnJsAQ",
     },
 }
+
+PRESENTATION_SECP256R1_SIGNED = {
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://identity.foundation/presentation-exchange/submission/v1"
+    ],
+    "type": [
+        "VerifiablePresentation",
+        "PresentationSubmission"
+    ],
+    "verifiableCredential": [
+        {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "id": "http://example.gov/credentials/3732",
+        "type": [
+            "VerifiableCredential",
+            "UniversityDegreeCredential"
+        ],
+        "credentialSubject": {
+            "id": "did:example:456",
+            "degree": {
+            "name": "Bachelor of Science and Arts",
+            "type": "BachelorDegree"
+            }
+        },
+        "issuer": {
+            "id": "did:key:z6Mkgg342Ycpuk263R9d8Aq6MUaxPn1DDeHyGo38EefXmgDL"
+        },
+        "issuanceDate": "2020-03-10T04:24:12.164Z",
+        "proof": {
+            "type": "Ed25519Signature2018",
+            "created": "2019-12-11T03:50:55+00:00",
+            "verificationMethod": "did:key:z6Mkgg342Ycpuk263R9d8Aq6MUaxPn1DDeHyGo38EefXmgDL#z6Mkgg342Ycpuk263R9d8Aq6MUaxPn1DDeHyGo38EefXmgDL",
+            "proofPurpose": "assertionMethod",
+            "jws": "eyJhbGciOiAiRWREU0EiLCAiYjY0IjogZmFsc2UsICJjcml0IjogWyJiNjQiXX0..tELgWSCo0jSOKLpHWLOe2ZWj6WxLFc6FcqBZzgQFdcaawC5mARYmdr0XA37TMUp2Q9jUwriNP4gQm3GFIHV9BQ"
+        }
+        }
+    ],
+    "proof": {
+        "type": "EcdsaSecp256r1Signature2019",
+        "created": "2024-08-22T05:45:02.226Z",
+        "verificationMethod": "did:key:zDnaezg44MqxBf9UzBBrCpPC4azQ4y4Sccq4nSvmRHahLvKy6#zDnaezg44MqxBf9UzBBrCpPC4azQ4y4Sccq4nSvmRHahLvKy6",
+        "proofPurpose": "authentication",
+        "proofValue": "z5rKHrW5z1hCXyobGCPRCH47M2ym6BKBw7DabvXRYqQgXGPXuQcLts7LsTyVWMrNH6YdcaabJMCBr3w2zPaiK4n14",
+        "challenge": "9542c683-4c93-4d93-a951-274ae669a71d"
+    },
+    "presentation_submission": {
+        "descriptor_map": [
+        {
+            "format": "ldp_vc",
+            "id": "1",
+            "path": "$.verifiableCredential[0]"
+        }
+        ],
+        "id": "37291630-7711-4a91-82a9-da231cbfc7a2"
+    }
+}

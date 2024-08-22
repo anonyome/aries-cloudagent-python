@@ -8,6 +8,7 @@ import nacl.bindings
 import nacl.exceptions
 import nacl.utils
 from marshmallow import ValidationError
+from aries_askar import AskarError, Key, KeyAlg
 
 from ..utils.jwe import JweEnvelope, JweRecipient, b64url, from_b64url
 from .bbs import (
@@ -17,7 +18,7 @@ from .bbs import (
     verify_signed_messages_bls12381g2,
 )
 from .error import WalletError
-from .key_type import BLS12381G2, ED25519, KeyType
+from .key_type import BLS12381G2, ED25519, P256, KeyType
 from .util import b58_to_bytes, b64_to_bytes, bytes_to_b58, random_seed
 
 
@@ -209,6 +210,12 @@ def verify_signed_message(
             )
         except BbsException as e:
             raise WalletError("Unable to verify message") from e
+    elif key_type == P256:
+        try:
+            pk = Key.from_public_bytes(KeyAlg.P256, verkey)
+            return pk.verify_signature(message, signature)
+        except AskarError as err:
+            raise WalletError("Exception when verifying message signature") from err
     else:
         raise WalletError(f"Unsupported key type: {key_type.key_type}")
 

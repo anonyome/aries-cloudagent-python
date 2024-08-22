@@ -20,7 +20,7 @@ from .did_info import INVITATION_REUSE_KEY
 from .did_method import SOV, DIDMethod, DIDMethods
 from .did_parameters_validation import DIDParametersValidation
 from .error import WalletDuplicateError, WalletError, WalletNotFoundError
-from .key_type import BLS12381G2, ED25519, X25519, KeyType, KeyTypes
+from .key_type import BLS12381G2, ED25519, X25519, P256, KeyType, KeyTypes
 from .util import b58_to_bytes, bytes_to_b58
 
 CATEGORY_DID = "did"
@@ -768,6 +768,12 @@ class AskarWallet(BaseWallet):
         if key_type == ED25519:
             try:
                 pk = Key.from_public_bytes(KeyAlg.ED25519, verkey)
+                return pk.verify_signature(message, signature)
+            except AskarError as err:
+                raise WalletError("Exception when verifying message signature") from err
+        if key_type == P256:
+            try:
+                pk = Key.from_public_bytes(KeyAlg.P256, verkey)
                 return pk.verify_signature(message, signature)
             except AskarError as err:
                 raise WalletError("Exception when verifying message signature") from err

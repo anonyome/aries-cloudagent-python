@@ -6,11 +6,12 @@ import pytest
 from ....core.in_memory import InMemoryProfile
 from ....did.did_key import DIDKey
 from ....wallet.in_memory import InMemoryWallet
-from ....wallet.key_type import BLS12381G2, ED25519
+from ....wallet.key_type import BLS12381G2, ED25519, P256
 from ...ld_proofs import (
     BbsBlsSignature2020,
     Ed25519Signature2018,
     Ed25519Signature2020,
+    EcdsaSecp256r1Signature2019,
     WalletKeyPair,
 )
 from ...ld_proofs.error import LinkedDataProofException
@@ -33,6 +34,7 @@ from .test_credential import (
     CREDENTIAL_VERIFIED,
     CREDENTIAL_VERIFIED_2020,
     PRESENTATION_SIGNED,
+    PRESENTATION_SECP256R1_SIGNED,
     PRESENTATION_UNSIGNED,
 )
 
@@ -282,6 +284,24 @@ class TestLinkedDataVerifiableCredential(IsolatedAsyncioTestCase):
             suites=[suite],
             document_loader=custom_document_loader,
         )
+
+        assert verification_result.verified
+        
+    async def test_verify_presentation_secp256r1_2019(self):
+        suite1 = EcdsaSecp256r1Signature2019(
+            key_pair=WalletKeyPair(profile=self.profile, key_type=P256),
+        )
+        suite2 = Ed25519Signature2018(
+            key_pair=WalletKeyPair(profile=self.profile, key_type=ED25519),
+        )
+        verification_result = await verify_presentation(
+            presentation=PRESENTATION_SECP256R1_SIGNED,
+            challenge="9542c683-4c93-4d93-a951-274ae669a71d",
+            suites=[suite1, suite2],
+            document_loader=custom_document_loader,
+        )
+        
+        print(verification_result)
 
         assert verification_result.verified
 
