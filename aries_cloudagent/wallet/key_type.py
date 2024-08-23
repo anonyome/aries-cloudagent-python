@@ -33,7 +33,7 @@ class KeyType:
 # multicodec is also not used now, but may be used again if py_multicodec is updated
 ED25519: KeyType = KeyType("ed25519", "ed25519-pub", b"\xed\x01")
 X25519: KeyType = KeyType("x25519", "x25519-pub", b"\xec\x01")
-P256: KeyType = KeyType("p256", "p256-pub", b"\x12\x00\x01")
+P256: KeyType = KeyType("p256", "p256-pub", b"\x80\x24")
 BLS12381G1: KeyType = KeyType("bls12381g1", "bls12_381-g1-pub", b"\xea\x01")
 BLS12381G2: KeyType = KeyType("bls12381g2", "bls12_381-g2-pub", b"\xeb\x01")
 BLS12381G1G2: KeyType = KeyType("bls12381g1g2", "bls12_381-g1g2-pub", b"\xee\x01")

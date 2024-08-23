@@ -7,6 +7,7 @@ from ..wallet.key_type import (
     BLS12381G1G2,
     BLS12381G2,
     ED25519,
+    P256,
     X25519,
     KeyType,
     KeyTypes,
@@ -275,6 +276,28 @@ def construct_did_key_ed25519(did_key: "DIDKey") -> dict:
 
     return did_doc
 
+def construct_did_key_p256(did_key: "DIDKey") -> dict:
+    """Construct P256 did:key.
+
+    Args:
+        did_key (DIDKey): did key instance to parse P256 did:key document from
+
+    Returns:
+        dict: The p256 did:key did document
+
+    """
+
+    return construct_did_signature_key_base(
+        id=did_key.did,
+        key_id=did_key.key_id,
+        verification_method={
+            "id": did_key.key_id,
+            "type": "EcdsaSecp256r1VerificationKey2019",
+            "controller": did_key.did,
+            "publicKeyBase58": did_key.public_key_b58,
+        },
+    )
+
 
 def construct_did_signature_key_base(*, id: str, key_id: str, verification_method: dict):
     """Create base did key structure to use for most signature keys.
@@ -298,6 +321,7 @@ def construct_did_signature_key_base(*, id: str, key_id: str, verification_metho
 DID_KEY_RESOLVERS = {
     ED25519: construct_did_key_ed25519,
     X25519: construct_did_key_x25519,
+    P256: construct_did_key_p256,
     BLS12381G2: construct_did_key_bls12381g2,
     BLS12381G1: construct_did_key_bls12381g1,
     BLS12381G1G2: construct_did_key_bls12381g1g2,
